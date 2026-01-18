@@ -15,9 +15,12 @@
     <div class="app-container">
         <header class="app-header">
             <h1>The Endless Atlas</h1>
+            <div id="user-area" style="position: absolute; top: 20px; right: 20px;">
+                <button id="login-btn" onclick="loginWithGoogle()" class="secondary-btn"
+                    style="font-size: 0.8rem; cursor: pointer;">Login to Save</button>
+                <span id="user-display" style="font-weight: bold; display: none; color: white;"></span>
+            </div>
         </header>
-
-
 
         <section id="game-controls" class="panel">
             <div class="controls-grid">
@@ -62,7 +65,6 @@
             </div>
 
             <div id="options-grid" class="options-grid">
-                <!-- Buttons injected by JS -->
             </div>
 
             <div id="feedback-area" class="feedback-area hidden">
@@ -73,6 +75,64 @@
     </div>
 
     <script src="script.js"></script>
+
+    <script type="module">
+        // 1. We changed these links to import "Auth" and "Firestore" instead of Analytics
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // 2. Your Config (I kept your keys)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCiEn69Uk4FW_zZePZd0pECVEka0od1-jQ",
+            authDomain: "endless-atlas.firebaseapp.com",
+            projectId: "endless-atlas",
+            storageBucket: "endless-atlas.firebasestorage.app",
+            messagingSenderId: "627615782733",
+            appId: "1:627615782733:web:fd6c068de64eb0a8494904",
+            measurementId: "G-7SE0D7SZSX"
+        };
+
+        // 3. Initialize the tools
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // 4. Make the Login function available to the button
+        window.loginWithGoogle = async function () {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                console.log("Logged in:", user.displayName);
+
+                // Update UI
+                document.getElementById("login-btn").style.display = "none";
+                document.getElementById("user-display").style.display = "inline-block";
+                document.getElementById("user-display").innerText = "Hi, " + user.displayName;
+            } catch (error) {
+                console.error("Login Error:", error);
+                alert("Login failed. See console for details.");
+            }
+        };
+
+        // 5. Make the Save Score function available to script.js
+        window.saveScore = async function (points) {
+            if (auth.currentUser) {
+                try {
+                    await addDoc(collection(db, "scores"), {
+                        uid: auth.currentUser.uid,
+                        name: auth.currentUser.displayName,
+                        points: points,
+                        timestamp: serverTimestamp()
+                    });
+                    console.log("Score Saved!");
+                } catch (e) {
+                    console.error("Error saving score:", e);
+                }
+            }
+        };
+    </script>
 </body>
 
 </html>
