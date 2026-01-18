@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Endless Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>The Endless Atlas</h1>
+        </header>
+
+
+
+        <section id="game-controls" class="panel">
+            <div class="controls-grid">
+                <div class="control-item">
+                    <label for="difficulty">Difficulty</label>
+                    <div class="select-wrapper">
+                        <select id="difficulty">
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                            <option value="Impossible">Impossible</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-item">
+                    <label for="region">Region</label>
+                    <div class="select-wrapper">
+                        <select id="region">
+                            <option value="World">The World</option>
+                            <option value="Asia">Asia</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Americas">Americas</option>
+                            <option value="Africa">Africa</option>
+                            <option value="Oceania">Oceania</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button id="generate-btn" class="primary-btn">
+                <span class="btn-text">Generate Question</span>
+                <span class="loader hidden"></span>
+            </button>
+        </section>
+
+        <main id="game-area" class="hidden">
+            <div class="question-card">
+                <div class="card-header">
+                    <span class="badge" id="badge-difficulty">Easy</span>
+                    <span class="badge" id="badge-region">Europe</span>
+                </div>
+                <h2 id="question-text">Question text will appear here...</h2>
+            </div>
+
+            <div id="options-grid" class="options-grid">
+                <!-- Buttons injected by JS -->
+            </div>
+
+            <div id="feedback-area" class="feedback-area hidden">
+                <p id="feedback-text"></p>
+                <button id="next-btn" class="secondary-btn">Next Question</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
