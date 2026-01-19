@@ -19,13 +19,64 @@
         </header>
 
         <div class="panel">
-            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
-                <!-- User will provide code for this later -->
-                Email sign up form requires implementation code.
-            </p>
-            <a href="landing.html" class="primary-btn outline-btn">Back to Start</a>
+            <div class="input-group">
+                <label for="email-in">Email</label>
+                <input type="email" id="email-in" placeholder="Enter your email">
+            </div>
+            <div class="input-group">
+                <label for="pass-in">Password</label>
+                <input type="password" id="pass-in" placeholder="Enter your password">
+            </div>
+
+            <div class="controls-grid" style="margin-bottom: 0;">
+                <button onclick="createAccount()" class="primary-btn">Sign Up</button>
+            </div>
+
+            <a href="index.html" class="secondary-text-link" style="display: block; margin-top: 1.5rem;">Back to
+                Start</a>
         </div>
     </div>
+
+    <!-- Firebase Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCiEn69Uk4FW_zZePZd0pECVEka0od1-jQ",
+            authDomain: "endless-atlas.firebaseapp.com",
+            projectId: "endless-atlas",
+            storageBucket: "endless-atlas.firebasestorage.app",
+            messagingSenderId: "627615782733",
+            appId: "1:627615782733:web:fd6c068de64eb0a8494904",
+            measurementId: "G-7SE0D7SZSX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Make globally available for button click
+        window.createAccount = async function () {
+            const email = document.getElementById("email-in").value;
+            const pass = document.getElementById("pass-in").value;
+
+            if (!email || !pass) {
+                alert("Please enter both email and password.");
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                console.log("Account created:", userCredential.user.email);
+                alert("Success! Account created.");
+                // Redirect to game
+                window.location.href = "game.html";
+            } catch (error) {
+                console.error("Error creating account:", error);
+                alert(error.message);
+            }
+        };
+    </script>
 </body>
 
 </html>

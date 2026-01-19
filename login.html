@@ -38,19 +38,26 @@
                 </svg>
                 Log in with Google
             </button>
-            <!-- Email login would go here -->
-
+            <!-- Email login -->
             <div class="divider">
-                <span>or</span>
+                <span>or email</span>
             </div>
 
-            <a href="landing.html" class="secondary-text-link">Cancel</a>
+            <div class="input-group">
+                <input type="email" id="email-in" placeholder="Email">
+            </div>
+            <div class="input-group">
+                <input type="password" id="pass-in" placeholder="Password">
+            </div>
+            <button onclick="emailLogin()" class="primary-btn">Login</button>
+
+            <a href="index.html" class="secondary-text-link">Cancel</a>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCiEn69Uk4FW_zZePZd0pECVEka0od1-jQ",
@@ -69,12 +76,31 @@
         document.getElementById('google-login-btn').addEventListener('click', async () => {
             try {
                 await signInWithPopup(auth, provider);
-                window.location.href = "index.html";
+                window.location.href = "game.html";
             } catch (error) {
                 console.error("Login Error:", error);
                 alert("Login failed: " + error.message);
             }
         });
+
+        window.emailLogin = async function () {
+            const email = document.getElementById("email-in").value;
+            const pass = document.getElementById("pass-in").value;
+
+            if (!email || !pass) {
+                alert("Please enter both email and password.");
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+                console.log("Logged in as:", userCredential.user.email);
+                window.location.href = "game.html";
+            } catch (error) {
+                console.error("Login failed:", error);
+                alert("Incorrect email or password.");
+            }
+        };
     </script>
 </body>
 
