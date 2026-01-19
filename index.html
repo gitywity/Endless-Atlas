@@ -79,6 +79,8 @@
                 // Sign in logic
                 const result = await signInWithPopup(auth, provider);
                 console.log("Signed in as", result.user.displayName);
+                // Set Auth Cookie
+                document.cookie = "auth=true; path=/; max-age=2592000";
                 // Redirect to game
                 window.location.href = "game.html";
             } catch (error) {

@@ -9,6 +9,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script>
+        // ROUTE PROTECTION: Check for auth cookie immediately
+        if (!document.cookie.split(';').some((item) => item.trim().startsWith('auth=true'))) {
+            window.location.href = "index.html";
+        }
+    </script>
 </head>
 
 <body>
@@ -104,12 +110,27 @@
             if (user) {
                 console.log("User detected:", user.email);
                 document.getElementById("login-btn").style.display = "none";
-                document.getElementById("user-display").style.display = "inline-block";
+                const userDisplay = document.getElementById("user-display");
+                userDisplay.style.display = "inline-block";
+                userDisplay.style.cursor = "pointer"; // Make it look clickable
+
                 // Use displayName (Google) or email (Email Auth)
                 const name = user.displayName || user.email.split('@')[0];
-                document.getElementById("user-display").innerText = "Hi, " + name;
+                userDisplay.innerText = "Hi, " + name + " (Log Out)";
+
+                // Add Sign Out Listener
+                userDisplay.onclick = async () => {
+                    if (confirm("Log out?")) {
+                        await signOut(auth);
+                        // Clear cookie
+                        document.cookie = "auth=; path=/; max-age=0";
+                        window.location.href = "index.html";
+                    }
+                };
             } else {
                 console.log("No user signed in");
+                // Double protection: if firebase says no user, kick them out
+                window.location.href = "index.html";
             }
         });
 

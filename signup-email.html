@@ -82,6 +82,9 @@
                 console.log("Account created & named:", userCredential.user.displayName);
                 alert("Success! Account created.");
 
+                // Set Auth Cookie
+                document.cookie = "auth=true; path=/; max-age=2592000";
+
                 // 3. Redirect to game
                 window.location.href = "game.html";
             } catch (error) {

@@ -76,6 +76,7 @@
         document.getElementById('google-login-btn').addEventListener('click', async () => {
             try {
                 await signInWithPopup(auth, provider);
+                document.cookie = "auth=true; path=/; max-age=2592000";
                 window.location.href = "game.html";
             } catch (error) {
                 console.error("Login Error:", error);
@@ -95,6 +96,7 @@
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, pass);
                 console.log("Logged in as:", userCredential.user.email);
+                document.cookie = "auth=true; path=/; max-age=2592000";
                 window.location.href = "game.html";
             } catch (error) {
                 console.error("Login failed:", error);
