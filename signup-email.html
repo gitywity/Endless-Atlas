@@ -20,6 +20,10 @@
 
         <div class="panel">
             <div class="input-group">
+                <label for="name-in">First Name</label>
+                <input type="text" id="name-in" placeholder="Enter your first name">
+            </div>
+            <div class="input-group">
                 <label for="email-in">Email</label>
                 <input type="email" id="email-in" placeholder="Enter your email">
             </div>
@@ -40,7 +44,7 @@
     <!-- Firebase Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCiEn69Uk4FW_zZePZd0pECVEka0od1-jQ",
@@ -57,19 +61,28 @@
 
         // Make globally available for button click
         window.createAccount = async function () {
+            const name = document.getElementById("name-in").value;
             const email = document.getElementById("email-in").value;
             const pass = document.getElementById("pass-in").value;
 
-            if (!email || !pass) {
-                alert("Please enter both email and password.");
+            if (!email || !pass || !name) {
+                alert("Please enter name, email, and password.");
                 return;
             }
 
             try {
+                // 1. Create User
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                console.log("Account created:", userCredential.user.email);
+
+                // 2. Update Profile with Name
+                await updateProfile(userCredential.user, {
+                    displayName: name
+                });
+
+                console.log("Account created & named:", userCredential.user.displayName);
                 alert("Success! Account created.");
-                // Redirect to game
+
+                // 3. Redirect to game
                 window.location.href = "game.html";
             } catch (error) {
                 console.error("Error creating account:", error);
